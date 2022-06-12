@@ -14,12 +14,13 @@ if [ "$2" == '' ]
 then
 	OUI='58656e'
 else
-	if egrep -qi '^[a-f0-9]{6}$' <<< "$2"
+	if egrep -qi '^([a-f0-9]{6}|[a-f0-9:]{8,9})$' <<< "$2"
 	then
 		OUI="$2"
+		OUI="${OUI//:}"
 	else
-		printf "That doesn't look like a proper three byte OUI.\nGenerating random one instead.\n" >&2
 		OUI=$(openssl rand -hex 3)
+		printf "That doesn't look like a proper three byte OUI.\nGenerating random one instead.\n${OUI:0:2}:${OUI:2:2}:${OUI:4:2}\n\n" >&2
 	fi
 fi
 
